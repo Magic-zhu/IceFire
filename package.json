@@ -256,7 +256,7 @@
     "electron-log": "^4.2.4",
     "electron-updater": "^4.3.4",
     "history": "^5.0.0",
-    "lighthouse": "^7.0.1",
+    "lighthouse": "^6.5.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
@@ -264,7 +264,7 @@
     "source-map-support": "^0.5.19"
   },
   "devEngines": {
-    "node": ">=10.x",
+    "node": ">=14.x",
     "npm": ">=6.x",
     "yarn": ">=1.21.3"
   },

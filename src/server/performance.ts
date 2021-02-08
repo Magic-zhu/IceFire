@@ -1,7 +1,7 @@
-const fs = require('fs');
 const lighthouse = require('lighthouse');
 const chromeLauncher = require('chrome-launcher');
 
+// lighthouse 性能检测
 const analyse = async (url:string) =>{
     const chrome = await chromeLauncher.launch({chromeFlags: ['--headless']});
     const options = {
