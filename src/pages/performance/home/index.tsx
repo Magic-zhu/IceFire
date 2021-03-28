@@ -37,10 +37,10 @@ export default class Home extends Component {
         title: '得分',
         dataIndex: 'score',
         key: 'score',
-        render:(score)=>{
+        render:(score:any)=>{
           score = Math.ceil(Number(score)*100)
           const color = this.scoreLevel(score)
-          return <span style={{color}}>{score}</span>
+          return <span style={{color}} key='tt'>{score}</span>
         }
       },
       {
@@ -76,6 +76,9 @@ export default class Home extends Component {
       });
     });
   }
+  componentWillUnmount(){
+    ipcRenderer.removeAllListeners('back_lighthouse')
+  }
   startAnalyse() {
     ipcRenderer.send('lighthouse', this.state.url);
     this.setState({
@@ -87,10 +90,10 @@ export default class Home extends Component {
       url: e.target.value,
     });
   }
-  scoreLevel(input) {
+  scoreLevel(input:number) {
     if (input <= 60) {
       return 'red';
-    } else if (this.state.score > 60 && this.state.score < 80) {
+    } else if (input > 60 && input < 80) {
       return 'orange';
     } else {
       return 'green';

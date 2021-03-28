@@ -13,7 +13,7 @@
  */
 
 /*!
- * ws: a node.js websocket client
+ * ws: a node.js websocket src
  * Copyright(c) 2011 Einar Otto Stangvik <einaros@gmail.com>
  * MIT Licensed
  */

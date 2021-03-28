@@ -15,7 +15,8 @@ import { app, BrowserWindow, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
-import register from './server/index'
+import register from '../server/index';
+
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -70,7 +71,7 @@ const createWindow = async () => {
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
-    height: 728,
+    height: 768,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       nodeIntegration: true,
@@ -105,8 +106,8 @@ const createWindow = async () => {
     event.preventDefault();
     shell.openExternal(url);
   });
-
-  //注册监听
+  //注册监听;
+  
   register()
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line

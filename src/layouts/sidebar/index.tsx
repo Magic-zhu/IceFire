@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styles from './index.less';
-import { ChromeOutlined, AppstoreOutlined } from '@ant-design/icons';
+import { ChromeOutlined, AppstoreOutlined,Html5Outlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 class SideBar extends Component<any> {
   state = {
@@ -15,6 +15,11 @@ class SideBar extends Component<any> {
         title: '性能分析',
         path: '/performance/home',
       },
+      {
+        icon: <Html5Outlined />,
+        title: '前端手册',
+        path: '/performance/manul',
+      },
     ],
     activeIndex: 0,
   };
@@ -28,7 +33,6 @@ class SideBar extends Component<any> {
     let { activeIndex } = this.state;
     return (
       <div className={styles.wrapper}>
-        <div className={styles.logoBox}></div>
         <div className={styles.functionList}>
           {this.state.functionList.map((e: any, index: number) => {
             return (
@@ -41,6 +45,7 @@ class SideBar extends Component<any> {
                 onClick={() => {
                   this.goToPage(e.path, index);
                 }}
+                key={index+'ss'}
               >
                 <span className={styles.icons}>{e.icon}</span>
                 <span>{e.title}</span>
