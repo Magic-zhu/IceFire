@@ -1,16 +1,17 @@
 const lighthouse = require('lighthouse');
 const puppeteer = require('puppeteer');
-interface AnalyseOptions{
-  mode:string;
+
+interface AnalyseOptions {
+  mode: string;
 }
 // 分析主方法
-const analyse = async (url: string,analyseOptions:AnalyseOptions) => {
+const analyse = async (url: string, analyseOptions: AnalyseOptions) => {
   const browser = await puppeteer.launch({
-    headless:true,
+    headless: true,
   });
   const page = await browser.newPage();
   await page.goto(url);
-  let rs = await page.metrics();
+  const rs = await page.metrics();
   const options = {
     logLevel: 'info',
     output: 'json',
@@ -23,25 +24,19 @@ const analyse = async (url: string,analyseOptions:AnalyseOptions) => {
   const result = {
     score: runnerResult.lhr.categories.performance.score,
     audits: runnerResult.lhr.audits,
-    metrics:rs,
+    metrics: rs,
   };
   return Promise.resolve(result);
 };
 
 // dom相关检测
-const DomGathering = async () =>{
-
-}
+const DomGathering = async () => {};
 
 // lighthouse相关检测
-const lighthouseGathering = async () =>{
+const lighthouseGathering = async () => {};
 
-}
-
-//页面请求相关检测
-const networkGathering = async () =>{
-
-}
+// 页面请求相关检测
+const networkGathering = async () => {};
 
 module.exports = {
   analyse,

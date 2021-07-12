@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
-import styles from './index.less';
-import { ChromeOutlined, AppstoreOutlined,Html5Outlined } from '@ant-design/icons';
+import {
+  ChromeOutlined,
+  AppstoreOutlined,
+  Html5Outlined,
+  CodeOutlined,
+} from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
+import styles from './index.less';
+
 class SideBar extends Component<any> {
   state = {
     functionList: [
@@ -20,17 +26,24 @@ class SideBar extends Component<any> {
         title: '前端手册',
         path: '/performance/manul',
       },
+      {
+        icon: <CodeOutlined />,
+        title: '终端工具',
+        path: '/tool/terminal',
+      },
     ],
     activeIndex: 0,
   };
+
   goToPage(path: string, index: number) {
     this.props.history.push(path);
     this.setState({
       activeIndex: index,
     });
   }
+
   render() {
-    let { activeIndex } = this.state;
+    const { activeIndex } = this.state;
     return (
       <div className={styles.wrapper}>
         <div className={styles.functionList}>
@@ -45,7 +58,7 @@ class SideBar extends Component<any> {
                 onClick={() => {
                   this.goToPage(e.path, index);
                 }}
-                key={index+'ss'}
+                key={`${index}ss`}
               >
                 <span className={styles.icons}>{e.icon}</span>
                 <span>{e.title}</span>

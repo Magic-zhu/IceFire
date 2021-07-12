@@ -18,8 +18,10 @@ export default function App() {
           </div>
           <div className="main">
             <Main>
-              {routes.map((e) => {
-                return <Route path={e.path} component={e.component} />;
+              {routes.map((e, index) => {
+                return (
+                  <Route path={e.path} component={e.component} key={e.path} />
+                );
               })}
             </Main>
           </div>
