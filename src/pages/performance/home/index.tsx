@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { Button, Input, Spin, Table } from 'antd';
+// @ts-ignore
 import styles from './index.less';
-const ipcRenderer = window.ipcRenderer;
+
+// @ts-ignore
+const { ipcRenderer } = window;
 
 interface State {
   url: string;
@@ -9,56 +12,64 @@ interface State {
   score: number;
   dataSource: any[];
   tableColumns: any[];
-  dataSourceMain:any []
+  dataSourceMain: any[];
 }
 
-interface lightHouseResult {
+interface LightHouseResult {
   [key: string]: any;
 }
 
-export default class Home extends Component {
-  state: State = {
-    url: '',
-    loading: false,
-    score: 0,
-    tableColumns: [
-      {
-        title: '指标类型',
-        dataIndex: 'id',
-        key: 'id',
-        width:300
-      },
-      {
-        title: '值',
-        dataIndex: 'displayValue',
-        key: 'displayValue',
-      },
-      {
-        title: '得分',
-        dataIndex: 'score',
-        key: 'score',
-        render:(score:any)=>{
-          score = Math.ceil(Number(score)*100)
-          const color = this.scoreLevel(score)
-          return <span style={{color}} key='tt'>{score}</span>
-        }
-      },
-      {
-        title: '描述',
-        dataIndex: 'description',
-        key: 'description',
-      },
-    ],
-    dataSource: [],
-    dataSourceMain:[],
-  };
+export default class Home extends Component <State>{
+
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      url: '',
+      loading: false,
+      score: 0,
+      tableColumns: [
+        {
+          title: '指标类型',
+          dataIndex: 'id',
+          key: 'id',
+          width: 300,
+        },
+        {
+          title: '值',
+          dataIndex: 'displayValue',
+          key: 'displayValue',
+        },
+        {
+          title: '得分',
+          dataIndex: 'score',
+          key: 'score',
+          render: (score: string|number) => {
+            const _score = Math.ceil(Number(score) * 100);
+            const color = this.scoreLevel(_score);
+
+            return (
+              <span style={{ color }} key="tt">
+                {score}
+              </span>
+            );
+          },
+        },
+        {
+          title: '描述',
+          dataIndex: 'description',
+          key: 'description',
+        },
+      ],
+      dataSource: [],
+      dataSourceMain: [],
+    };
+  }
+
   componentDidMount() {
-    ipcRenderer.on('back_lighthouse', (e, data: lightHouseResult) => {
+    ipcRenderer.on('back_lighthouse', (e, data: LightHouseResult) => {
       this.setState({
         loading: false,
       });
-      this.state.loading = false;
-      console.log(data)
       const dataSource = Object.values(data.audits);
       const dataSourceMain = [
         data.audits['first-contentful-paint'],
@@ -76,29 +87,34 @@ export default class Home extends Component {
       });
     });
   }
-  componentWillUnmount(){
-    ipcRenderer.removeAllListeners('back_lighthouse')
+
+  componentWillUnmount() {
+    ipcRenderer.removeAllListeners('back_lighthouse');
   }
+
   startAnalyse() {
     ipcRenderer.send('lighthouse', this.state.url);
     this.setState({
       loading: true,
     });
   }
+
   urlChange(e: any) {
     this.setState({
       url: e.target.value,
     });
   }
-  scoreLevel(input:number) {
+
+  scoreLevel(input: number) {
     if (input <= 60) {
       return 'red';
-    } else if (input > 60 && input < 80) {
-      return 'orange';
-    } else {
-      return 'green';
     }
+    if (input > 60 && input < 80) {
+      return 'orange';
+    }
+    return 'green';
   }
+
   render() {
     return (
       <div className={styles.wrapper}>
