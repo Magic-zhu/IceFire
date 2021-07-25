@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import { Button, Input, Spin, Table } from 'antd';
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import styles from './index.less';
-const ipcRenderer = window.ipcRenderer;
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const { ipcRenderer } = window;
 
 interface State {
   url: string;
@@ -9,56 +15,72 @@ interface State {
   score: number;
   dataSource: any[];
   tableColumns: any[];
-  dataSourceMain:any []
+  dataSourceMain: any[];
 }
 
-interface lightHouseResult {
+interface LightHouseResult {
   [key: string]: any;
 }
 
-export default class Home extends Component {
-  state: State = {
-    url: '',
-    loading: false,
-    score: 0,
-    tableColumns: [
-      {
-        title: '指标类型',
-        dataIndex: 'id',
-        key: 'id',
-        width:300
-      },
-      {
-        title: '值',
-        dataIndex: 'displayValue',
-        key: 'displayValue',
-      },
-      {
-        title: '得分',
-        dataIndex: 'score',
-        key: 'score',
-        render:(score:any)=>{
-          score = Math.ceil(Number(score)*100)
-          const color = this.scoreLevel(score)
-          return <span style={{color}} key='tt'>{score}</span>
-        }
-      },
-      {
-        title: '描述',
-        dataIndex: 'description',
-        key: 'description',
-      },
-    ],
-    dataSource: [],
-    dataSourceMain:[],
-  };
+function scoreLevel(input: number) {
+  if (input <= 60) {
+    return 'red';
+  }
+  if (input > 60 && input < 80) {
+    return 'orange';
+  }
+  return 'green';
+}
+
+export default class Home extends Component<null, State> {
+  constructor() {
+    super(null);
+    this.state = {
+      url: '',
+      loading: false,
+      score: 0,
+      tableColumns: [
+        {
+          title: '指标类型',
+          dataIndex: 'id',
+          key: 'id',
+          width: 300,
+        },
+        {
+          title: '值',
+          dataIndex: 'displayValue',
+          key: 'displayValue',
+        },
+        {
+          title: '得分',
+          dataIndex: 'score',
+          key: 'score',
+          render: (score: string | number) => {
+            const result = Math.ceil(Number(score) * 100);
+            const color = scoreLevel(result);
+            return (
+              <span style={{ color }} key="tt">
+                {score}
+              </span>
+            );
+          },
+        },
+        {
+          title: '描述',
+          dataIndex: 'description',
+          key: 'description',
+        },
+      ],
+      dataSource: [],
+      dataSourceMain: [],
+    };
+  }
+
   componentDidMount() {
-    ipcRenderer.on('back_lighthouse', (e, data: lightHouseResult) => {
+    ipcRenderer.on('back_lighthouse', (e, data: LightHouseResult) => {
       this.setState({
         loading: false,
       });
-      this.state.loading = false;
-      console.log(data)
       const dataSource = Object.values(data.audits);
       const dataSourceMain = [
         data.audits['first-contentful-paint'],
@@ -76,33 +98,36 @@ export default class Home extends Component {
       });
     });
   }
-  componentWillUnmount(){
-    ipcRenderer.removeAllListeners('back_lighthouse')
+
+  componentWillUnmount() {
+    ipcRenderer.removeAllListeners('back_lighthouse');
   }
+
   startAnalyse() {
-    ipcRenderer.send('lighthouse', this.state.url);
+    const { url } = this.state;
+    ipcRenderer.send('lighthouse', url);
     this.setState({
       loading: true,
     });
   }
+
   urlChange(e: any) {
     this.setState({
       url: e.target.value,
     });
   }
-  scoreLevel(input:number) {
-    if (input <= 60) {
-      return 'red';
-    } else if (input > 60 && input < 80) {
-      return 'orange';
-    } else {
-      return 'green';
-    }
-  }
+
   render() {
+    const {
+      loading,
+      score,
+      dataSourceMain,
+      tableColumns,
+      dataSource,
+    } = this.state;
     return (
       <div className={styles.wrapper}>
-        <Spin spinning={this.state.loading}>
+        <Spin spinning={loading}>
           <div className={styles.main}>
             <p>
               <Input
@@ -127,22 +152,16 @@ export default class Home extends Component {
           <div className={styles.report}>
             <p className={styles.totalScore}>
               <span>最终性能得分:</span>
-              <span style={{ color: this.scoreLevel(this.state.score) }}>
-                {this.state.score}
-              </span>
+              <span style={{ color: scoreLevel(score) }}>{score}</span>
             </p>
             <h3>主要性能指标</h3>
             <Table
               bordered
-              dataSource={this.state.dataSourceMain}
-              columns={this.state.tableColumns}
+              dataSource={dataSourceMain}
+              columns={tableColumns}
             />
             <h3>完整性能指标</h3>
-            <Table
-              bordered
-              dataSource={this.state.dataSource}
-              columns={this.state.tableColumns}
-            />
+            <Table bordered dataSource={dataSource} columns={tableColumns} />
           </div>
         </Spin>
       </div>

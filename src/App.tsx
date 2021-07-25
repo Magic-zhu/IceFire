@@ -18,8 +18,9 @@ export default function App() {
           </div>
           <div className="main">
             <Main>
-              {routes.map((e, index) => {
+              {routes.map((e) => {
                 return (
+                  // @ts-ignore
                   <Route path={e.path} component={e.component} key={e.path} />
                 );
               })}
